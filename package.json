@@ -1,0 +1,34 @@
+{
+  "name": "ccbridge-js",
+  "version": "1.0.0",
+  "description": "cross-platform xiangqi GUI",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "package-win": "electron-packager . --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"ccbridge-js\"",
+    "package-linux": "electron-packager . --overwrite --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maksimKorzh/ccbridge-js.git"
+  },
+  "keywords": [
+    "chinese",
+    "chess",
+    "xiangqi",
+    "gui",
+    "ccbridge"
+  ],
+  "author": "Code Monkey King",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maksimKorzh/ccbridge-js/issues"
+  },
+  "homepage": "https://github.com/maksimKorzh/ccbridge-js#readme",
+  "dependencies": {
+    "electron": "^12.0.0"
+  },
+  "devDependencies": {
+    "electron-packager": "^15.2.0"
+  }
+}
