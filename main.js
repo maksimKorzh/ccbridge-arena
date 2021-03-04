@@ -25,7 +25,7 @@ app.on('ready', function() {
   
   // load URL into window
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'mainWindow.html'),
+    pathname: path.join(__dirname, 'views/mainWindow.html'),
     protocol: 'file:',
     slashes: true
   }));
@@ -64,7 +64,7 @@ function createTestWindow() {
   
   // load URL into window
   testWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'testWindow.html'),
+    pathname: path.join(__dirname, 'views/testWindow.html'),
     protocol: 'file:',
     slashes: true
   }));

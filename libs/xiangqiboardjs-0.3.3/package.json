@@ -1,0 +1,33 @@
+{
+  "name": "@lengyanyu258/xiangqiboardjs",
+  "author": "@lengyanyu258 <lengyanyu258@outlook.com> (github.com/lengyanyu258)",
+  "description": "JavaScript xiangqiboard widget",
+  "homepage": "https://lengyanyu258.github.io/xiangqiboardjs/index.html",
+  "license": "MIT",
+  "version": "0.3.3",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": "git://github.com/lengyanyu258/xiangqiboardjs.git",
+  "files": [
+    "dist/"
+  ],
+  "dependencies": {
+    "jquery": "^3.4.1"
+  },
+  "devDependencies": {
+    "code-prettify": "^0.1.0",
+    "csso": "^4.0.3",
+    "fs-plus": "^3.1.1",
+    "kidif": "^1.1.0",
+    "mustache": "^4.0.1",
+    "normalize.css": "^8.0.1",
+    "standard": "^14.3.3",
+    "terser": "^4.6.10"
+  },
+  "scripts": {
+    "publish": "npm run build && npm run website",
+    "build": "node scripts/build.js",
+    "website": "node scripts/website.js"
+  }
+}

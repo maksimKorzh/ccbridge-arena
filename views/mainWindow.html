@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CCBridge JS</title>
+  
+  <!-- Electron specific  -->
+  <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+  <!-- JQuery -->
+  <script src="../libs/bootstrap/jquery.js"></script>
+  
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="../libs/bootstrap/bootstrap.css">
+  <script src="../libs/bootstrap/bootstrap.js"></script>
+  <script src="../libs/bootstrap/bundle.js"></script>
+  
+  <!-- chessboardjs -->
+  <link rel="stylesheet" href="../libs/xiangqiboardjs-0.3.3/css/xiangqiboard-0.3.3.css">
+  <script src="../libs/xiangqiboardjs-0.3.3/js/xiangqiboard-0.3.3.js"></script>
+  
+  <!-- Built in Xiangqi engine Wukong -->
+  <script src="../libs/wukong/wukong.js"></script>
+  
+  <!-- Electron specific  -->
+  <script>if (window.module) module = window.module;</script>
+  
+
+</head>
+<body>
+  <!-- Dong Ping Xiangqi game editor -->
+  <script src="../scripts/dpxq.js"></script>
+  
+  <!-- Xiangqi board -->
+  <div id="xiangqiboard" style="width: 450px"></div>
+  
+  <!-- Main window script -->
+  <script src="../scripts/mainWindow.js"></script>
+  
+</body>
+</html>
