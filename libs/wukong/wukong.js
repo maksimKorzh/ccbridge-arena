@@ -1746,6 +1746,7 @@ var Engine = function() {
       printMoveList: function(moveList) { printMoveList(moveList); },
       makeMove: function(move) { makeMove(move)},
       takeBack: function() { takeBack(); },
+      getPly: function() { return gamePly; },
       
       // timing
       resetTimeControl: function() { resetTimeControl(); },

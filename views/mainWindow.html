@@ -3,6 +3,15 @@
 <head>
   <title>CCBridge JS</title>
   
+  <!-- Main window css -->
+  <style type="text/css">
+    .scrollable-menu {
+      height: 494px;
+      max-height: 494px;
+      overflow-x: hidden;
+    }
+  </style>
+  
   <!-- Electron specific  -->
   <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
@@ -23,15 +32,39 @@
   
   <!-- Electron specific  -->
   <script>if (window.module) module = window.module;</script>
-  
 
 </head>
 <body>
   <!-- Dong Ping Xiangqi game editor -->
   <script src="../scripts/dpxq.js"></script>
   
-  <!-- Xiangqi board -->
-  <div id="xiangqiboard" style="width: 450px"></div>
+  <div class="m-0 p-0" style="position: absolute; left: 500px;">
+    <div class="row m-0 p-0">
+      <!-- Xiangqi board -->
+      <div class="col m-0 p-0">  
+        <div id="xiangqiboard" style="width: 450px"></div>
+      </div>
+      
+      <!-- Move list -->
+      <div class="col m-0 p-0">
+        <div class="card m-0 p-0" style="width: 125px; height: 494px;">
+          <div class="card-body m-0 p-0">
+            <ul id = "movelist" class="list-group scrollable-menu" style="width: 125px;"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Game controls -->
+    <div class="col m-0 p-0 mt-1 btn-group" style="width: 445px;">
+      <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold mr-1" onclick="firstMove();" title="Go to first move"><<</button>
+      <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold mr-1" onclick="previousMove();" title="Go to previous move"><</button>
+      <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold mr-1 disabled" onclick="" title="Auto play moves">Play</button>
+      <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold mr-1" onclick="board.flip();" title="Flip board">Flip</button>
+      <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold mr-1" onclick="nextMove();" title="Go to next move">></button>
+      <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold mr" onclick="lastMove()" title="Go to last move">>></button>
+    </div>
+  </div>
   
   <!-- Main window script -->
   <script src="../scripts/mainWindow.js"></script>

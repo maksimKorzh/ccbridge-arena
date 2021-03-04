@@ -6,67 +6,84 @@
  ============================              
 \****************************/
 
-
-/* handle new game button click
-$('#newgame').on('click', function() {
-  // reset engine
-  engine.setBoard(engine.START_FEN);
+// update board
+function updateBoard(moveNumber) {
+  // update UBB board
+  gotonum(moveNumber);
   
-  // set initial board position
-  board.position('start');
-});
-
-// handle make move button click
-$('#makemove').on('click', function() {
-  // make computer move
-  makeMove();
-});
-
-// handle take back button click
-$('#takeback').on('click', function() {
-  // take move back
-  engine.takeBack();
+  // get current move
+  let currentMove = document.getElementById('shownow').value.split('/')[0];
+  let UBBfen = getFENTEXT(P[currentMove]);
   
-  // update board position
-  board.position(engine.generateFen());
-});
-
-// handle flip board button click
-$('#flipboard').on('click', function() {
-  // flip board
-  board.flip();
-});
-
-// handle select move time option
-$('#move_time').on('change', function() {
-  // disable fixed depth
-  $('#fixed_depth').val('0');
-});
-
-// handle select fixed depth option
-$('#fixed_depth').on('change', function() {
-  // disable fixed depth
-  $('#move_time').val('0');
-});
-
-// handle set FEN button click
-$('#set_fen').on('click', function() {
-  // set user FEN
+  // update engine board
+  engine.setBoard(UBBfen);
   
-  // FEN parsed
-  if (game.load($('#fen').val()))
-    // set board position
-    board.position(game.fen());
+  // update GUI board
+  board.position(UBBfen);
   
-  // FEN is not parsed
-  else
-    alert('Illegal FEN!');
-});
+  /*if (engine.getPiece(targetSquare) && moveStack.count > 0 && moveStack.count < moveStack.moves.length - 1) {
+    document.getElementById(targetSquare).style.backgroundColor = SELECT_COLOR;
+    playSound(move);
+  }*/
+}
 
-// prevent scrolling on touch devices
-$('#chessboard').on('scroll touchmove touchend touchstart contextmenu', function(e) {
-  e.preventDefault();
-});*/
+// show first move of the game
+function firstMove() {
+  updateBoard('First');
+}
+
+// take move back
+function previousMove() {
+  updateBoard('Prev');
+}
+
+// make next move
+function nextMove() {
+  updateBoard('Next');
+}
+
+// show last move of the game
+function lastMove() {
+  updateBoard('Last');
+}
+
+/****************************\
+ ============================
+ 
+       DPXQ INTEGRATION
+  
+ ============================              
+\****************************/
+
+// add move to move list view
+function addMove() {
+  let moveList = document.getElementById('movelist')
+  let moveItem = document.createElement('li');
+  let UBBMove = document.getElementById('move_' + engine.getPly()).innerText;
+  moveItem.id = 'UBB_move_' + engine.getPly();
+  moveItem.classList = 'btn list-group-item list-group-item-action m-0 p-0';
+  moveItem.style = 'font-size: 16px';
+  moveItem.textContent = UBBMove;
+  moveItem.setAttribute('onclick', 'updateBoard(parseInt(this.id.split("move_")[1]))');
+  moveList.appendChild(moveItem);
+}
+
+// update DPXQ board
+function updateUBB(source, target) {
+  let sourceFile = source[0].charCodeAt() - 'a'.charCodeAt();
+  let sourceRank = 9 - parseInt(source[1]);
+  let targetFile = target[0].charCodeAt() - 'a'.charCodeAt();
+  let targetRank = 9 - parseInt(target[1]);
+  let ubbSource = sourceFile.toString() +  sourceRank.toString();
+  let ubbTarget = targetFile.toString() + targetRank.toString();
+
+  // make move on UBB board
+  getMove(ubbSource);
+  getMove(ubbTarget);
+  
+  // add move to UBB move list
+  addMove();
+}
 
 
 /****************************\
@@ -77,21 +94,9 @@ $('#chessboard').on('scroll touchmove touchend touchstart contextmenu', function
  ============================              
 \****************************/
 
-// make engine move
-function makeMove() {
-  // make computer move
-  setTimeout(function() {
-    let bestMove = engine.searchTime(1000); // search for 1 second
-    engine.makeMove(bestMove);
-    let fen = engine.generateFen();
-    board.position(fen);
-  }, 300);
-}
-
 // on dropping piece
 function onDrop (source, target) {
   let move = source + target;
-  console.log(source + target);
   let validMove = engine.moveFromString(move);
 
   // invalid move
@@ -110,6 +115,9 @@ function onDrop (source, target) {
   // make move on engine's board
   engine.makeMove(validMove);    
   engine.printBoard();
+  
+  // sync with DPXQ board
+  updateUBB(source, target);
 }
 
 // update the board position after the piece snap
@@ -151,10 +159,10 @@ var config = {
   position: 'start', //'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C2C4/9/RNBAKABNR b',
   onDrop: onDrop,
   onSnapEnd: onSnapEnd
-}
+};
 
 // create chess board widget instance
-var board = Xiangqiboard('xiangqiboard', config)
+var board = Xiangqiboard('xiangqiboard', config);
 
 // create WukongJS engine instance
 const engine = new Engine();

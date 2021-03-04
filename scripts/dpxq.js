@@ -3589,8 +3589,8 @@ function execLoad() {
   TT[1]=Number(new Date());
   
   // hide view elements
-  document.getElementById('message').setAttribute('hidden', 'true');  
-  document.getElementById('divs').setAttribute('hidden', 'true');
+  //document.getElementById('message').setAttribute('hidden', 'true');  
+  //document.getElementById('divs').setAttribute('hidden', 'true');
 }
 if (document.body.onkeydown==null) document.body.onkeydown=fixKeyDown;
 if (!viewedit) var viewedit=false;
@@ -3598,147 +3598,12 @@ if (isSP||Mobile||getvar('viewurl')=='edit') document.write('<scr'+'ipt type="te
 else execLoad();
 
 
-/****************************\
-============================
-
-     UBB to TXT parser
-
-============================              
-\****************************/
 /*
-// add view elements
-document.write('<textarea id="ubb" style="position: absolute; top: 0px; left: 500px; width: 855px; height: 380px;" placeholder="paste UBB game here..."></textarea>');
-document.write('<button onclick="UBB2TXT();" style="position: relative; top: 350px; left: 395px; height: 35px; font-size: 16px" >UBB to TXT</button>');
-document.write('<textarea id="txt" style="position: absolute; top: 390px; left: 500px; width: 855px; height: 260px;" placeholder="converted game would be displayed here..."></textarea>');
-
-// stack
-var clickBack = [];
-
-// map variation number to letters
-const VARIATIONS = [0, 0, 0, 'b', 0, 'c', 0, 'd', 0, 'e', 0, 'f', 0, 'g', 0, 'h', 0, 'i', 0, 'j', 0, 'k'];
-
-// walk through all variations
-function process(count) {
-var moveList = document.getElementById('m_text');
-var move = moveList.childNodes[count];
-
-// end of variation/game
-if (move == undefined && clickBack.length) {
-  let lastClickMove = document.getElementById(clickBack[clickBack.length - 1].moveId);
-  let lastClickCount = clickBack[clickBack.length - 1].moveCount;
-  lastClickMove.onmouseup();
-  
-  // get current variation index
-  let currentVariation = 0;
-  document.getElementById('v_text').childNodes.forEach((item, index) => {
-    try {
-    if (item.style.backgroundColor == 'rgb(49, 106, 197)') currentVariation = index;
-    } catch(e) {}
-  });
-  
-  // click next variation
-  try {
-    currentVariation += 2
-    document.getElementById('v_text').childNodes[currentVariation].click();
-    TXT.value += '\n ' + VARIATIONS[currentVariation - 1] + '. ';
-    let mId = document.getElementById('v_text').childNodes[currentVariation].id.split('var_')[1];
-    let moveNumber = document.getElementById('m_' + mId.split('_')[1] + '_n').innerHTML.split('&nbsp;').join('');
-    let moveText = document.getElementById('m_' + mId.split('_')[1] + '_m').innerHTML;
-    let moveComment = document.getElementById('c_text').value.split('\n\n').join('');
-    TXT.value += moveNumber + moveText + ' ' + (moveComment ? '\n' + moveComment + '\n\n' : '\n');
-  } catch(e) {
-    document.getElementById('v_text').childNodes[0].click();
-    clickBack.pop();
-  }
-  
-  count = lastClickCount + 1;
-  move = moveList.childNodes[count];
-  
-  TXT.value += '\n';
-}
-
-if (move == undefined) {
-  if (clickBack.length == 0) {
-    //console.log('end of game', clickBack);
-    return;
-  } else {
-    let lastClickMove = document.getElementById(clickBack[clickBack.length - 1].moveId);
-    let lastClickCount = clickBack[clickBack.length - 1].moveCount;
-    lastClickMove.onmouseup();
-    
-    // get current variation index
-    let currentVariation = 0;
-    document.getElementById('v_text').childNodes.forEach((item, index) => {
-      try {
-      if (item.style.backgroundColor == 'rgb(49, 106, 197)') currentVariation = index;
-      } catch(e) {}
-    });
-    
-    // click next variation
-    try {
-      currentVariation += 2
-      document.getElementById('v_text').childNodes[currentVariation].click();
-      TXT.value += '\n ' + VARIATIONS[currentVariation - 1] + '. ';
-      let mId = document.getElementById('v_text').childNodes[currentVariation].id.split('var_')[1];
-      let moveNumber = document.getElementById('m_' + mId.split('_')[1] + '_n').innerHTML.split('&nbsp;').join('');
-      let moveText = document.getElementById('m_' + mId.split('_')[1] + '_m').innerHTML;
-      let moveComment = document.getElementById('c_text').value.split('\n\n').join('');
-      TXT.value += moveNumber + moveText + ' ' + (moveComment ? '\n' + moveComment + '\n\n' : '\n');
-    } catch(e) {
-      document.getElementById('v_text').childNodes[0].click();
-      clickBack.pop();
-    }
-    
-    count = lastClickCount + 1;
-    move = moveList.childNodes[count];
-    
-    TXT.value += '\n';
-  }
-};
-
-if (move.id && move.id != 'move_0') {
-  move.onmouseup();
-  
-  let moveNumber = document.getElementById('m_' + move.id.split('_')[1] + '_n').innerHTML.split('&nbsp;').join('');
-  let moveText = document.getElementById('m_' + move.id.split('_')[1] + '_m').innerHTML;
-  let moveComment = document.getElementById('c_text').value.split('\n\n').join('');
-  let moveVariations = document.getElementById('v_text').childNodes;
-  
-  TXT.value += moveNumber + moveText + ' ' + (moveComment ? '\n' + moveComment + '\n\n' : '');
-
-  if (moveVariations.length > 1) {
-    for (let variationCount = 0; variationCount < moveVariations.length; variationCount++) {
-      let variation = moveVariations[variationCount];
-      
-      if (variation.id != undefined && variation.id != document.getElementById('v_text').childNodes[0].id) {
-        clickBack.push({moveId: move.id, moveCount: count});
-                    
-        // click first variation
-        variation.click();
-    
-        TXT.value += '\n a. ';
-        
-        let moveNumber = document.getElementById('m_' + move.id.split('_')[1] + '_n').innerHTML.split('&nbsp;').join('');
-        let moveText = document.getElementById('m_' + move.id.split('_')[1] + '_m').innerHTML;
-        let moveComment = document.getElementById('c_text').value.split('\n\n').join('');
-        
-        TXT.value += moveNumber + moveText + ' ' + (moveComment ? '\n' + moveComment + '\n\n' : '\n');
-        break;
-        
-      }
-    }
-  }
-}
-
-setTimeout(function() {
-  process(count + 1);
-}, 0);
-}
-
 function UBB2TXT() {
   UBB = document.getElementById('ubb').value;
   TXT = document.getElementById('txt');
   initdata();
   //process(0)
-}*/
+}
+*/
 
