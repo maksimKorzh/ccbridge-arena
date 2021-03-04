@@ -147,6 +147,7 @@ function onSnapEnd () {
 // chess board configuration
 var config = {
   draggable: true,
+  pieceTheme: '../libs/xiangqiboardjs-0.3.3/img/xiangqipieces/traditional/{piece}.png',
   position: 'start', //'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C2C4/9/RNBAKABNR b',
   onDrop: onDrop,
   onSnapEnd: onSnapEnd

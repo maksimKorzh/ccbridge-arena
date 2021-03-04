@@ -526,7 +526,7 @@
 
     // default board theme is wikimedia
     if (!config.hasOwnProperty('boardTheme') || !isString(config.boardTheme)) {
-      config.boardTheme = '../libs/xiangqiboardjs-0.3.3/img/xiangqiboards/wikimedia/xiangqiboard.svg'
+      config.boardTheme = '../libs/xiangqiboardjs-0.3.3/img/xiangqiboards/wikimedia/xiangqiboard.bmp'
     }
 
     // animation speeds
