@@ -307,40 +307,11 @@ alert(item);
 // Importing dialog module using remote 
 const dialog = electron.remote.dialog; 
 
-// save game to UBB file
-function saveUbb() {
-  // copy UBB to clipboard (that's the way provided by DPXQ editor...)
-  copyUbb();
-  
-  // save file
-  dialog.showSaveDialog({ 
-      title: 'Save UBB game', 
-      defaultPath: path.join(__dirname, '../game.ubb'), 
-      buttonLabel: 'Save', 
-      filters: [ 
-          { 
-              name: 'UBB games', 
-              extensions: ['ubb', 'txt'] 
-          }, ], 
-      properties: [] 
-  }).then(file => { 
-      // Stating whether dialog operation was cancelled or not. 
-      console.log(file.canceled); 
-      if (!file.canceled) { 
-          console.log(file.filePath.toString()); 
-            
-          // Creating and Writing to the sample.txt file 
-          fs.writeFile(file.filePath.toString(),  
-                       electron.clipboard.readText(), function (err) { 
-              if (err) throw err;
-          }); 
-      } 
-  }).catch(err => { 
-      console.log(err) 
-  });
-  
-  // restore view
-  window.scrollTo(0, 0);
+// new game
+function newGame() {
+  UBB = '';
+  initdata();
+  updateGUIboard('First');
 }
 
 // load UBB game from file
@@ -377,6 +348,43 @@ function loadUbb() {
       console.log(err) 
   });
 }
+
+// save game to UBB file
+function saveUbb() {
+  // copy UBB to clipboard (that's the way provided by DPXQ editor...)
+  copyUbb();
+  
+  // save file
+  dialog.showSaveDialog({ 
+      title: 'Save UBB game', 
+      defaultPath: path.join(__dirname, '../game.ubb'), 
+      buttonLabel: 'Save', 
+      filters: [ 
+          { 
+              name: 'UBB games', 
+              extensions: ['ubb', 'txt'] 
+          }, ], 
+      properties: [] 
+  }).then(file => { 
+      // Stating whether dialog operation was cancelled or not. 
+      console.log(file.canceled); 
+      if (!file.canceled) { 
+          console.log(file.filePath.toString()); 
+            
+          // Creating and Writing to the sample.txt file 
+          fs.writeFile(file.filePath.toString(),  
+                       electron.clipboard.readText(), function (err) { 
+              if (err) throw err;
+          }); 
+      } 
+  }).catch(err => { 
+      console.log(err) 
+  });
+  
+  // restore view
+  window.scrollTo(0, 0);
+}
+
 
 /****************************\
  ============================

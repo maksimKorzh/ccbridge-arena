@@ -5,9 +5,15 @@
   
   <!-- Main window css -->
   <style type="text/css">
-    .scrollable-menu {
+    .scrollable-movelist {
       height: 490px;
       max-height: 490px;
+      overflow-x: hidden;
+    }
+    
+    .scrollable-variationlist {
+      height: 158px;
+      max-height: 158px;
       overflow-x: hidden;
     }
   </style>
@@ -49,7 +55,7 @@
       <div class="col m-0 p-0" style="position: absolute; left: 446px;">
         <div class="card m-0 p-0" style="width: 145px; height: 494px; border: 2px solid #404040;">
           <div class="card-body m-0 p-0">
-            <ul id = "movelist" class="list-group scrollable-menu">
+            <ul id = "movelist" class="list-group scrollable-movelist">
               <li class="btn list-group-item bg-light m-0 p-0" style="font-size: 16px; font-weight: bold;">Moves</li>
               <li id="UBB_move_0" class="btn list-group-item list-group-item-action bg-primary text-white text-center m-0 p-0" onclick="updateGUIboard('First')">Start</li>
             </ul>
@@ -71,7 +77,7 @@
         <!-- Variation list -->
         <div class="card m-0 p-0" style="position: absolute; top: 332px; width: 250px; height: 162px; border: 2px solid #404040;">
           <div class="card-body m-0 p-0">
-            <ul id = "variationlist" class="list-group scrollable-menu">
+            <ul id = "variationlist" class="list-group scrollable-variationlist">
               <li class="btn list-group-item bg-light m-0 p-0" style="font-size: 16px; font-weight: bold;">Variations</li>
             </ul>
           </div>
@@ -98,6 +104,7 @@
       <!-- Game controls -->
       <div class="col m-0 p-0" style="position: absolute; top: 491px; left: 446px;">
         <div class="col m-0 p-0 mt-1 btn-group" style="width: 396px;">
+          <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold" style="border: 2px solid #404040; width: 68px; height: 42px; margin-right: 2px;" onclick="newGame();" title="New game">🗎</button>
           <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold" style="border: 2px solid #404040; height: 42px; margin-right: 2px;" onclick="loadUbb();" title="Open game">📂</button>
           <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold" style="border: 2px solid #404040; height: 42px;" onclick="saveUbb();" title="Save game">💾</button>
         </div>
