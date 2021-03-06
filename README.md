@@ -10,7 +10,7 @@ https://www.youtube.com/watch?v=w_jrAZJpEjA&list=PLmN0neTso3JyhEwFGe6EZa7rTlawjg
 git clone https://github.com/maksimKorzh/ccbridge-js.git
 
 # Go into the repository
-cd electron-quick-start
+cd ccbridge-js
 
 # Install dependencies
 npm install
