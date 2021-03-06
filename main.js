@@ -10,6 +10,15 @@ process.env.NODE_ENV = 'development';
 // app
 const {app, BrowserWindow, Menu, ipcMain} = electron;
 
+
+/****************************\
+ ============================
+ 
+          GAME EDITOR
+
+ ============================              
+\****************************/
+
 // main window
 let mainWindow;
 
@@ -17,7 +26,11 @@ let mainWindow;
 app.on('ready', function() {
   // create new window
   mainWindow = new BrowserWindow({
+    resizable: false,
+    width: 844,
+    height: 564,
     webPreferences: {
+      enableRemoteModule: true,
       nodeIntegration: true,
       contextIsolation: false
     }
@@ -25,7 +38,7 @@ app.on('ready', function() {
   
   // load URL into window
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'views/mainWindow.html'),
+    pathname: path.join(__dirname, 'views/game_editor.html'),
     protocol: 'file:',
     slashes: true
   }));
@@ -49,6 +62,15 @@ ipcMain.on('item:add', function(e, item){
   // Still have a reference to addWindow in memory. Need to reclaim memory (Grabage collection)
   testWindow = null;
 });
+
+
+/****************************\
+ ============================
+ 
+          TEST WINDOW
+
+ ============================              
+\****************************/
 
 function createTestWindow() {
   // create new window

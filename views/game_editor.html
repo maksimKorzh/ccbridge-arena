@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CCBridge JS</title>
+  
+  <!-- Main window css -->
+  <style type="text/css">
+    .scrollable-menu {
+      height: 490px;
+      max-height: 490px;
+      overflow-x: hidden;
+    }
+  </style>
+  
+  <!-- Electron specific  -->
+  <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+  <!-- JQuery -->
+  <script src="../libs/bootstrap/jquery.js"></script>
+  
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="../libs/bootstrap/bootstrap.css">
+  <script src="../libs/bootstrap/bootstrap.js"></script>
+  <script src="../libs/bootstrap/bundle.js"></script>
+  
+  <!-- chessboardjs -->
+  <link rel="stylesheet" href="../libs/xiangqiboardjs-0.3.3/css/xiangqiboard-0.3.3.css">
+  <script src="../libs/xiangqiboardjs-0.3.3/js/xiangqiboard-0.3.3.js"></script>
+  
+  <!-- Built in Xiangqi engine Wukong -->
+  <script src="../libs/wukong/wukong.js"></script>
+  
+  <!-- Electron specific  -->
+  <script>if (window.module) module = window.module;</script>
+
+</head>
+<body style="background-color: #dddddd;">
+  <!-- Dong Ping Xiangqi game editor -->
+  <script src="../scripts/dpxq.js"></script>
+  
+  <div class="m-0 p-0" style="position: absolute; left: 1px; top: 1px;">
+    <div class="row m-0 p-0">
+      <!-- Xiangqi board -->
+      <div class="col m-0 p-0">  
+        <div id="xiangqiboard" style="width: 450px;"></div>
+      </div>
+      
+      <!-- Move list -->
+      <div class="col m-0 p-0" style="position: absolute; left: 446px;">
+        <div class="card m-0 p-0" style="width: 145px; height: 494px; border: 2px solid #404040;">
+          <div class="card-body m-0 p-0">
+            <ul id = "movelist" class="list-group scrollable-menu">
+              <li class="btn list-group-item bg-light m-0 p-0" style="font-size: 16px; font-weight: bold;">Moves</li>
+              <li id="UBB_move_0" class="btn list-group-item list-group-item-action bg-primary text-white text-center m-0 p-0" onclick="updateGUIboard('First')">Start</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col m-0 p-0" style="position: absolute; left: 592px;">
+        <!-- Comments -->
+        <div class="card m-0 p-0" style="width: 250px; border: 2px solid #404040;">
+          <div class="card-body m-0 p-0">
+            <li class="btn list-group-item bg-light m-0 p-0" style="font-size: 16px; font-weight: bold;">
+              <button class="col btn btn-outline-secondary text-dark bg-light font-weight-bold" style="font-size: 16px; font-weight: bold; border: 2px solid #404040;" onclick="editComment()">Add comment</button>
+            </li>
+            <textarea id="comments" class="form-control m-0" style="width: 100%; resize: none; height: 285px;" spellcheck="false" placeholder="Write a comment and click above 'Add comment' button to annotate the game"></textarea>
+          </div>
+        </div>
+        
+        <!-- Variation list -->
+        <div class="card m-0 p-0" style="position: absolute; top: 332px; width: 250px; height: 162px; border: 2px solid #404040;">
+          <div class="card-body m-0 p-0">
+            <ul id = "variationlist" class="list-group scrollable-menu">
+              <li class="btn list-group-item bg-light m-0 p-0" style="font-size: 16px; font-weight: bold;">Variations</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row m-0 p-0">
+      <!-- Move list controls -->
+      <div class="col m-0 p-0" style="position: absolute; top: 491px;">
+        <div class="col m-0 p-0 mt-1 btn-group" style="width: 447px;">
+          <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold p-1" style="border: 2px solid #404040; margin-right: 2px;" onclick="stylePieces();" title="Style pieces">
+            <img id="pieceStyle" src="../libs/xiangqiboardjs-0.3.3/img/xiangqipieces/graphic/bK.svg" style="width: 30px;"></img>
+          </button>
+          <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold" style="border: 2px solid #404040; margin-right: 2px;" onclick="updateGUIboard('First');" title="Go to first move">⮜⮜</button>
+          <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold" style="border: 2px solid #404040; margin-right: 2px;" onclick="updateGUIboard('Prev');" title="Go to previous move">⮜</button>
+          <button class="btn btn-outline-secondary text-danger bg-light font-weight-bold" style="border: 2px solid #404040; margin-right: 2px;" onclick="deleteMove();" title="Delete move/moves/variation">❌</button>
+          <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold" style="border: 2px solid #404040; margin-right: 2px;" onclick="updateGUIboard('Next');" title="Go to next move">⮞</button>
+          <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold" style="border: 2px solid #404040; margin-right: 2px;" onclick="updateGUIboard('Last');" title="Go to last move">⮞⮞</button>
+          <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold" style="border: 2px solid #404040; margin-right: 2px;" onclick="board.flip();" title="Flip board">⮮⮭</button>
+        </div>
+      </div>
+
+      <!-- Game controls -->
+      <div class="col m-0 p-0" style="position: absolute; top: 491px; left: 446px;">
+        <div class="col m-0 p-0 mt-1 btn-group" style="width: 396px;">
+          <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold" style="border: 2px solid #404040; height: 42px; margin-right: 2px;" onclick="loadUbb();" title="Open game">📂</button>
+          <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold" style="border: 2px solid #404040; height: 42px;" onclick="saveUbb();" title="Save game">💾</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Main window script -->
+  <script src="../scripts/game_editor.js"></script>
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

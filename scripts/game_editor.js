@@ -1,10 +1,25 @@
 /****************************\
  ============================
  
-      USER INPUT HANDLERS
+       GUI MANIPULATION
 
  ============================              
 \****************************/
+
+// style pieces
+function stylePieces() {
+  if (config.pieceTheme.includes('graphic')) {
+    config.pieceTheme = '../libs/xiangqiboardjs-0.3.3/img/xiangqipieces/traditional/{piece}.png';
+    document.getElementById('pieceStyle').src = '../libs/xiangqiboardjs-0.3.3/img/xiangqipieces/graphic/bK.svg';
+  } else {
+    config.pieceTheme = '../libs/xiangqiboardjs-0.3.3/img/xiangqipieces/graphic/{piece}.png';
+    document.getElementById('pieceStyle').src = '../libs/xiangqiboardjs-0.3.3/img/xiangqipieces/traditional/bK.svg';
+  }
+  
+  board = Xiangqiboard('xiangqiboard', config);
+  updateGUIboard('Prev');
+  updateGUIboard('Next');
+}
 
 // highlight move in move list
 function highlightMove(move) {
@@ -77,8 +92,14 @@ function updateGUIboard(moveNumber, variationId) {
 
 // edit comment
 function editComment() {
+  if (document.getElementById('comments').value == '') {
+    alert('Write a comment first');
+    return;
+  }
+  
   document.getElementById('c_text').value = document.getElementById('comments').value;
   EditComment(cText);
+  alert('Comment has been saved');
 }
 
 // delete move/moves/variation
@@ -194,7 +215,13 @@ function updateUBB(source, target) {
       document.getElementById('v_addnew').querySelector('a').click();
   
   // add move to move list
-  setTimeout(() => {updateGameTree();}, 0);
+  setTimeout(() => { updateGameTree(); }, 0);
+}
+
+// export UBB game to clipboard
+function copyUbb() {
+  copyUBB();
+  setTimeout(() => { clickYES(); }, 0);
 }
 
 
@@ -267,14 +294,89 @@ function playSound(move) {
  ============================              
 \****************************/
 
-/*const electron = require('electron');
-  const {ipcRenderer} = electron;
-  const ul = document.querySelector('ul');
+const electron = require('electron');
+const path = require('path');
+const fs = require('fs');
 
-  ipcRenderer.on('item:add', function(e, item){
-  alert(item);
-  });*/
+/*const {ipcRenderer} = electron;
 
+ipcRenderer.on('item:add', function(e, item){
+alert(item);
+});*/
+
+// Importing dialog module using remote 
+const dialog = electron.remote.dialog; 
+
+// save game to UBB file
+function saveUbb() {
+  // copy UBB to clipboard (that's the way provided by DPXQ editor...)
+  copyUbb();
+  
+  // save file
+  dialog.showSaveDialog({ 
+      title: 'Save UBB game', 
+      defaultPath: path.join(__dirname, '../game.ubb'), 
+      buttonLabel: 'Save', 
+      filters: [ 
+          { 
+              name: 'UBB games', 
+              extensions: ['ubb', 'txt'] 
+          }, ], 
+      properties: [] 
+  }).then(file => { 
+      // Stating whether dialog operation was cancelled or not. 
+      console.log(file.canceled); 
+      if (!file.canceled) { 
+          console.log(file.filePath.toString()); 
+            
+          // Creating and Writing to the sample.txt file 
+          fs.writeFile(file.filePath.toString(),  
+                       electron.clipboard.readText(), function (err) { 
+              if (err) throw err;
+          }); 
+      } 
+  }).catch(err => { 
+      console.log(err) 
+  });
+  
+  // restore view
+  window.scrollTo(0, 0);
+}
+
+// load UBB game from file
+function loadUbb() {
+  dialog.showOpenDialog({ 
+      title: 'Open UBB game', 
+      defaultPath: path.join(__dirname, '../game.ubb'), 
+      buttonLabel: 'Open', 
+      filters: [ 
+          { 
+              name: 'UBB games', 
+              extensions: ['ubb', 'txt'] 
+          }, ], 
+      properties: [] 
+  }).then((file) => {
+    if (!file.canceled) {
+      fs.readFile(file.filePaths[0], 'utf-8', (err, data) => {
+          if(err){
+              alert("An error ocurred reading the file :" + err.message);
+              return;
+          }
+
+          // load game
+          UBB = data;
+          initdata();
+          updateGUIboard('First');
+          
+          // restore view
+          window.scrollTo(0, 0);
+      });
+    }
+  }).catch(err => {
+      alert('Internal error: ' + err);
+      console.log(err) 
+  });
+}
 
 /****************************\
  ============================
@@ -288,7 +390,7 @@ function playSound(move) {
 var config = {
   draggable: true,
   pieceTheme: '../libs/xiangqiboardjs-0.3.3/img/xiangqipieces/traditional/{piece}.png',
-  position: 'start', //'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C2C4/9/RNBAKABNR b',
+  position: 'start',
   onDrop: onDrop,
   onSnapEnd: onSnapEnd
 };

@@ -3589,21 +3589,11 @@ function execLoad() {
   TT[1]=Number(new Date());
   
   // hide view elements
-  //document.getElementById('message').setAttribute('hidden', 'true');  
-  //document.getElementById('divs').setAttribute('hidden', 'true');
+  document.getElementById('DhtmlXQ').style.top = '540px';
 }
 if (document.body.onkeydown==null) document.body.onkeydown=fixKeyDown;
 if (!viewedit) var viewedit=false;
 if (isSP||Mobile||getvar('viewurl')=='edit') document.write('<scr'+'ipt type="text/javascr'+'ipt" src="'+DhtmlXQimgpath+'DhtmlXQ_www_dpxq_com_save.js"><\/scr'+'ipt>');
 else execLoad();
 
-
-/*
-function UBB2TXT() {
-  UBB = document.getElementById('ubb').value;
-  TXT = document.getElementById('txt');
-  initdata();
-  //process(0)
-}
-*/
 
