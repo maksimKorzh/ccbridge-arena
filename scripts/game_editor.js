@@ -1,6 +1,21 @@
 /****************************\
  ============================
  
+        MAIN GUI MODULE
+
+ ============================              
+\****************************/
+
+const electron = require('electron');
+const path = require('path');
+const fs = require('fs');
+const {ipcRenderer} = electron;
+const dialog = electron.remote.dialog;
+
+
+/****************************\
+ ============================
+ 
        GUI MANIPULATION
 
  ============================              
@@ -82,6 +97,7 @@ function updateGUIboard(moveNumber, variationId) {
   
   // update GUI board
   board.position(UBBfen);
+  ipcRenderer.send('guifen', engine.generateFen());
   
   // current move to highlight
   updateGameTree();
@@ -125,6 +141,7 @@ function deleteMove() {
   
   // update GUI board
   board.position(UBBfen);
+  ipcRenderer.send('guifen', engine.generateFen());
   
   // current move to highlight
   updateGameTree();
@@ -259,12 +276,13 @@ function movePiece (source, target) {
   updateUBB(source, target);
   
   // play sound
-  if (validMove) playSound(validMove);
+  if (validMove) playSound(validMove);  
 }
 
 // update the board position after the piece snap
 function onSnapEnd () {
   board.position(engine.generateFen());
+  ipcRenderer.send('guifen', engine.generateFen());
 }
 
 /****************************\
@@ -294,20 +312,26 @@ function playSound(move) {
  ============================              
 \****************************/
 
-const electron = require('electron');
-const path = require('path');
-const fs = require('fs');
-
-const {ipcRenderer} = electron;
-
+// listen to best move
 ipcRenderer.on('bestmove', function(e, bestMove) {
-  movePiece(bestMove[0] + bestMove[1], bestMove[2] + bestMove[3]);
-  updateGUIboard('Prev');
-  updateGUIboard('Next');
+  movePiece(bestMove[0] + bestMove[1], bestMove[2] + bestMove[3], 0);
+  setTimeout(function() {
+    updateGUIboard(document.getElementById('shownow').value.split('/')[0]);
+  }, 0); 
+  
+  /*setTimeout(function() {
+    // get current FEN
+    let currentMove = document.getElementById('shownow').value.split('/')[0];
+    let UBBfen = getFENTEXT(P[currentMove]);
+    
+    // update engine board
+    //engine.setBoard(UBBfen);
+    
+    // update GUI board
+    //board.position(UBBfen);
+    alert(UBBfen);
+  }, 1);*/
 });
-
-// Importing dialog module using remote 
-const dialog = electron.remote.dialog; 
 
 // new game
 function newGame() {
@@ -332,7 +356,7 @@ function loadUbb() {
     if (!file.canceled) {
       fs.readFile(file.filePaths[0], 'utf-8', (err, data) => {
           if(err){
-              alert("An error ocurred reading the file :" + err.message);
+              alert('An error ocurred reading the file :' + err.message);
               return;
           }
 

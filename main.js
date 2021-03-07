@@ -65,9 +65,10 @@ app.on('ready', function() {
       label: 'Engine',
       submenu: [
         {
-          label: 'Load new engine',
+          accelerator: 'Ctrl+D',
+          label: 'Debug engine',
           click() {
-            createEngineWindow();
+            createEngineDebugWindow();
           }
         }
       ]
@@ -97,42 +98,43 @@ app.on('ready', function() {
  ============================              
 \****************************/
 
-function createEngineWindow() {
-  // destroy previous window if any
-  engineWindow = null;
-  
-  // create new window
-  engineWindow = new BrowserWindow({
-    show: false,
-    resizable: false,
-    width: 300,
-    height: 400,
-    webPreferences: {
-      enableRemoteModule: true,
-      nodeIntegration: true,
-      contextIsolation: false
-    }
-  });
-  
-  // load URL into window
-  engineWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'views/engine.html'),
-    protocol: 'file:',
-    slashes: true
-  }));
-  
-  // to look more like desktop app
-  engineWindow.webContents.on('did-finish-load', function() {
-    engineWindow.show();
-  });
-  
-  // garbage collection handle
-  engineWindow.on('close', function() {
-    engineWindow = null;
-  });
-  
-  // don't show menu
-  engineWindow.setMenu(null)
+let engineDebugWindow = null;
+
+function createEngineDebugWindow() {
+  if (engineDebugWindow == null) { 
+    // create new window
+    engineDebugWindow = new BrowserWindow({
+      show: false,
+      resizable: false,
+      width: 391,
+      height: 486,
+      webPreferences: {
+        enableRemoteModule: true,
+        nodeIntegration: true,
+        contextIsolation: false
+      }
+    });
+    
+    // load URL into window
+    engineDebugWindow.loadURL(url.format({
+      pathname: path.join(__dirname, 'views/engine_debug.html'),
+      protocol: 'file:',
+      slashes: true
+    }));
+    
+    // to look more like desktop app
+    engineDebugWindow.webContents.on('did-finish-load', function() {
+      engineDebugWindow.show();
+    });
+    
+    // garbage collection handle
+    engineDebugWindow.on('close', function() {
+      engineDebugWindow = null;
+    });
+    
+    // don't show menu
+    engineDebugWindow.setMenu(null)
+  }
 }
 
 
@@ -144,12 +146,20 @@ function createEngineWindow() {
  ============================              
 \****************************/
 
-// catch item:add
+// listen to best move from engine
 ipcMain.on('bestmove', function(e, bestMove){
   gameEditor.webContents.send('bestmove', bestMove);
-  //engineWindow.close(); 
-  // Still have a reference to addWindow in memory. Need to reclaim memory (Grabage collection)
-  //engineWindow = null;
 });
+
+// listen to GUI move
+ipcMain.on('guifen', function(e, guiFen) {
+  // send to all windows
+  if (engineDebugWindow)
+    engineDebugWindow.webContents.send('guifen', guiFen);
+});
+
+
+
+
 
 
