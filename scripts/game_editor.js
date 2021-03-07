@@ -144,7 +144,7 @@ function updateGameTree() {
   // reset move list
   let moveList = document.getElementById('movelist');
   moveList.innerHTML = `
-    <li class="btn list-group-item bg-light m-0 p-0" style="font-size: 16px; font-weight: bold;">Move list</li>
+    <li class="btn list-group-item bg-light m-0 p-0" style="font-size: 16px; font-weight: bold;">Moves</li>
     <li id="UBB_move_0" class="btn list-group-item list-group-item-action text-center m-0 p-0" onclick="updateGUIboard('First')">Start</li>
   `;
   
@@ -228,13 +228,13 @@ function copyUbb() {
 /****************************\
  ============================
  
-    USER CONTROL FUNCTIONS
+         MOVE PIECES
   
  ============================              
 \****************************/
 
-// on dropping piece
-function onDrop (source, target) {
+// move piece
+function movePiece (source, target) {
   let move = source + target;
   let validMove = engine.moveFromString(move);
 
@@ -298,11 +298,13 @@ const electron = require('electron');
 const path = require('path');
 const fs = require('fs');
 
-/*const {ipcRenderer} = electron;
+const {ipcRenderer} = electron;
 
-ipcRenderer.on('item:add', function(e, item){
-alert(item);
-});*/
+ipcRenderer.on('bestmove', function(e, bestMove) {
+  movePiece(bestMove[0] + bestMove[1], bestMove[2] + bestMove[3]);
+  updateGUIboard('Prev');
+  updateGUIboard('Next');
+});
 
 // Importing dialog module using remote 
 const dialog = electron.remote.dialog; 
@@ -399,7 +401,7 @@ var config = {
   draggable: true,
   pieceTheme: '../libs/xiangqiboardjs-0.3.3/img/xiangqipieces/traditional/{piece}.png',
   position: 'start',
-  onDrop: onDrop,
+  onDrop: movePiece,
   onSnapEnd: onSnapEnd
 };
 

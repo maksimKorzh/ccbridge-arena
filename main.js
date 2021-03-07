@@ -1,11 +1,16 @@
+/****************************\
+ ============================
+ 
+         CCBRIDGE JS
+
+ ============================              
+\****************************/
+
+
 // import packages
 const electron = require('electron');
 const url = require('url');
 const path = require('path');
-
-// set environment
-process.env.NODE_ENV = 'development';
-//process.env.NODE_ENV = 'production';
 
 // app
 const {app, BrowserWindow, Menu, ipcMain} = electron;
@@ -20,12 +25,13 @@ const {app, BrowserWindow, Menu, ipcMain} = electron;
 \****************************/
 
 // main window
-let mainWindow;
+let gameEditor;
 
 // Listen for app ready
 app.on('ready', function() {
   // create new window
-  mainWindow = new BrowserWindow({
+  gameEditor = new BrowserWindow({
+    show: false,
     resizable: false,
     width: 844,
     height: 564,
@@ -37,100 +43,113 @@ app.on('ready', function() {
   });
   
   // load URL into window
-  mainWindow.loadURL(url.format({
+  gameEditor.loadURL(url.format({
     pathname: path.join(__dirname, 'views/game_editor.html'),
     protocol: 'file:',
     slashes: true
   }));
   
+  // to look more like desktop app
+  gameEditor.webContents.on('did-finish-load', function() {
+    gameEditor.show();
+  });
+  
   // quit app when closed
-  mainWindow.on('closed', function() {
+  gameEditor.on('closed', function() {
     app.quit();
   });
   
   // build menu from template
-  const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-
+  const mainMenu = Menu.buildFromTemplate([
+    {
+      label: 'Engine',
+      submenu: [
+        {
+          label: 'Load new engine',
+          click() {
+            createEngineWindow();
+          }
+        }
+      ]
+    },
+    {
+      accelerator: 'Ctrl+Shift+I',
+      label: 'DevTools',
+      click(item, focusedWindow) {
+        focusedWindow.toggleDevTools();
+      }
+    },
+    {
+      role: 'reload'
+    }
+  ]);
+  
   // insert menu
   Menu.setApplicationMenu(mainMenu);
-});
-
-// catch item:add
-ipcMain.on('item:add', function(e, item){
-  mainWindow.webContents.send('item:add', item);
-  testWindow.close(); 
-  // Still have a reference to addWindow in memory. Need to reclaim memory (Grabage collection)
-  testWindow = null;
 });
 
 
 /****************************\
  ============================
  
-          TEST WINDOW
+        ENGINE WINDOWS
 
  ============================              
 \****************************/
 
-function createTestWindow() {
+function createEngineWindow() {
+  // destroy previous window if any
+  engineWindow = null;
+  
   // create new window
-  testWindow = new BrowserWindow({
-    width: 400,
-    height: 300,
-    title: 'test window',
+  engineWindow = new BrowserWindow({
+    show: false,
+    resizable: false,
+    width: 300,
+    height: 400,
     webPreferences: {
+      enableRemoteModule: true,
       nodeIntegration: true,
       contextIsolation: false
     }
   });
   
   // load URL into window
-  testWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'views/testWindow.html'),
+  engineWindow.loadURL(url.format({
+    pathname: path.join(__dirname, 'views/engine.html'),
     protocol: 'file:',
     slashes: true
   }));
   
+  // to look more like desktop app
+  engineWindow.webContents.on('did-finish-load', function() {
+    engineWindow.show();
+  });
+  
   // garbage collection handle
-  testWindow.on('close', function() {
-    testWindow = null;
+  engineWindow.on('close', function() {
+    engineWindow = null;
   });
+  
+  // don't show menu
+  engineWindow.setMenu(null)
 }
 
-// create menu template
-const mainMenuTemplate = [
-  {
-    label: 'File',
-    submenu: [
-      {
-        label: 'New window',
-        click() {
-          createTestWindow();
-        }
-      },
-      {
-        label: 'Quit',
-        click() {
-          app.quit();
-        }
-      }
-    ]
-  }
-];
 
-// add developer tools to menu if not in production
-if (process.env.NODE_ENV != 'production') {
-  mainMenuTemplate.push({
-    accelerator: 'Ctrl+Shift+I',
-    label: 'DevTools',
-    click(item, focusedWindow) {
-      focusedWindow.toggleDevTools();
-    }
-  },
-  {
-    role: 'reload'
-  });
-}
+/****************************\
+ ============================
+ 
+     WINDOW COMMUNICATIONS
 
+ ============================              
+\****************************/
+
+// catch item:add
+ipcMain.on('bestmove', function(e, bestMove){
+  gameEditor.webContents.send('bestmove', bestMove);
+  //engineWindow.close(); 
+  // Still have a reference to addWindow in memory. Need to reclaim memory (Grabage collection)
+  //engineWindow = null;
+});
 
 

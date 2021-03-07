@@ -97,7 +97,7 @@
           <button class="btn btn-outline-secondary text-danger bg-light font-weight-bold" style="border: 2px solid #404040; margin-right: 2px;" onclick="deleteMove();" title="Delete move/moves/variation">❌</button>
           <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold" style="border: 2px solid #404040; margin-right: 2px;" onclick="updateGUIboard('Next');" title="Go to next move">⮞</button>
           <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold" style="border: 2px solid #404040; margin-right: 2px;" onclick="updateGUIboard('Last');" title="Go to last move">⮞⮞</button>
-          <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold" style="border: 2px solid #404040; margin-right: 2px;" onclick="board.flip();" title="Flip board">⮮⮭</button>
+          <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold" style="border: 2px solid #404040; margin-right: 2px;" onclick="board.flip(); MOVE_SOUND.play();" title="Flip board">⮮⮭</button>
         </div>
       </div>
 
