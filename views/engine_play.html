@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Engine</title>
+  
+  <!-- Electron specific  -->
+  <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+  <!-- JQuery -->
+  <script src="../libs/bootstrap/jquery.js"></script>
+  
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="../libs/bootstrap/bootstrap.css">
+  <script src="../libs/bootstrap/bootstrap.js"></script>
+  <script src="../libs/bootstrap/bundle.js"></script>
+  
+  <!-- Electron specific  -->
+  <script>if (window.module) module = window.module;</script>
+
+</head>
+<body style="background-color: #dddddd;">
+  <div style="margin-left: 1px; margin-right: 1px;">
+    <!-- Engine output -->
+    <textarea id="output" class="form-control m-0" spellcheck="false" style="width: 100%; height: 341px; resize: none; border: 2px solid #404040;"></textarea>
+    
+    <!-- Load engine -->
+    <button class="col btn btn-outline-secondary text-dark bg-light font-weight-bold" style="margin-top: 1px; margin-bottom: 1px; border: 2px solid #404040;" title="Load engine" onclick="loadEngine();">Load engine</button>
+    
+    <!-- Difficulty -->
+    <div class="btn-group m-0 p-0" style="width: 388px;">
+      <div class="col text-center m-0 p-0">
+        <select id="depth" class="col form-control" style="border: 2px solid #404040;">
+          <option value="0" selected>N/A</option>
+          <option value="1">1 ply, fixed depth</option>
+          <option value="2">2 ply, fixed depth</option>
+          <option value="3">3 ply, fixed depth</option>
+          <option value="4">4 ply, fixed depth</option>
+          <option value="5">5 ply, fixed depth</option>
+          <option value="6">6 ply, fixed depth</option>
+          <option value="7">7 ply, fixed depth</option>
+          <option value="8">8 ply, fixed depth</option>
+          <option value="9">9 ply, fixed depth</option>
+          <option value="10">10 ply, fixed depth</option>
+        </select>
+      </div>
+      
+      <div class="col text-center m-0 p-0">
+        <select id="time" class="col form-control" style="margin-left: 1px; border: 2px solid #404040;">
+          <option value="0">N/A</option>
+          <option value="1" selected>1 sec, fixed time</option>
+          <option value="2">2 sec, fixed time</option>
+          <option value="3">3 sec, fixed time</option>
+          <option value="4">4 sec, fixed time</option>
+          <option value="5">5 sec, fixed time</option>
+          <option value="6">6 sec, fixed time</option>
+          <option value="7">7 sec, fixed time</option>
+          <option value="8">8 sec, fixed time</option>
+          <option value="9">9 sec, fixed time</option>
+          <option value="10">10 sec, fixed time</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Difficulty -->
+    <div class="btn-group m-0 p-0" style="width: 388px;">
+      <div class="col text-center m-0 p-0">
+        <select id="engineside" class="col form-control" style="margin-top: 1px; border: 2px solid #404040;">
+          <option value="0">Engine plays red</option>
+          <option value="1" selected>Engine plays black</option>
+          <option value="2">Analysis mode</option>
+        </select>
+      </div>
+      <div class="col text-center m-0 p-0">
+        <button class="col btn btn-outline-secondary text-dark bg-light font-weight-bold" style="height: 38px; margin-left: 1px; margin-top: 1px; margin-bottom: 1px; border: 2px solid #404040;" title="Load engine" onclick="makeMove('');">Make move</button>
+      </div>
+    </div>
+
+  </div>
+  <script src="../scripts/engine_play.js"></script>
+</body>
+</html>
