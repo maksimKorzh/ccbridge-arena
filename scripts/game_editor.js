@@ -104,6 +104,11 @@ function updateGUIboard(moveNumber, variationId) {
   
   // play sound
   MOVE_SOUND.play()
+  
+  // highlight last move
+  document.querySelectorAll('.square-2b8ce').forEach(function(item) {
+    item.classList.remove('highlight');
+  });
 }
 
 // edit comment
@@ -276,7 +281,13 @@ function movePiece (source, target) {
   updateUBB(source, target);
   
   // play sound
-  if (validMove) playSound(validMove);  
+  if (validMove) playSound(validMove);
+  
+  // highlight last move
+  document.querySelectorAll('.square-2b8ce').forEach(function(item) {
+    item.classList.remove('highlight');
+  });
+  document.querySelector('.square-' + target).classList.add('highlight');
 }
 
 // update the board position after the piece snap
@@ -317,20 +328,13 @@ ipcRenderer.on('bestmove', function(e, bestMove) {
   movePiece(bestMove[0] + bestMove[1], bestMove[2] + bestMove[3], 0);
   setTimeout(function() {
     updateGUIboard(document.getElementById('shownow').value.split('/')[0]);
-  }, 0); 
-  
-  /*setTimeout(function() {
-    // get current FEN
-    let currentMove = document.getElementById('shownow').value.split('/')[0];
-    let UBBfen = getFENTEXT(P[currentMove]);
     
-    // update engine board
-    //engine.setBoard(UBBfen);
-    
-    // update GUI board
-    //board.position(UBBfen);
-    alert(UBBfen);
-  }, 1);*/
+    // highlight last move
+    document.querySelectorAll('.square-2b8ce').forEach(function(item) {
+      item.classList.remove('highlight');
+    });
+    document.querySelector('.square-' + bestMove[2] + bestMove[3]).classList.add('highlight');
+  }, 0);
 });
 
 // new game
@@ -425,6 +429,7 @@ var config = {
   draggable: true,
   pieceTheme: '../libs/xiangqiboardjs-0.3.3/img/xiangqipieces/traditional/{piece}.png',
   position: 'start',
+  //onDragStart: onDragStart,
   onDrop: movePiece,
   onSnapEnd: onSnapEnd
 };
