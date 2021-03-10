@@ -262,12 +262,12 @@ function copyUbb() {
 // check for game state
 function isGameOver() {
   if (engine.generateLegalMoves().length == 0) {
-    gameResult = (engine.getSide() ? 'Black is checkmated' : 'Red is checkmated');
+    gameResult = (engine.getSide() ? 'Red wins' : 'Black wins');
     return 1;
   }
 
   if (engine.generateLegalMoves().length == 0) {
-    gameResult = (engine.getSide() ? 'Red is checkmated' : 'Black is checkmated') + ' mate';
+    gameResult = (engine.getSide() ? 'Black wins' : 'Red wins');
     return 1;
   }
   
@@ -411,6 +411,9 @@ function loadUbb() {
           }
 
           // load game
+          try {
+            document.title = data.split('[DhtmlXQ_title]')[1].split('[/DhtmlXQ_title]')[0]
+          } catch(e) { alert('Game title is undefined'); }
           UBB = data;
           initdata();
           updateGUIboard('First');

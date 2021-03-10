@@ -4,6 +4,15 @@ Cross-platform Chinese chess xiangqi GUI inspired by CCBridge
 # Development progress
 https://www.youtube.com/watch?v=w_jrAZJpEjA&list=PLmN0neTso3JyhEwFGe6EZa7rTlawjgNtu
 
+# Features
+ - View/Edit games in famous UBB format
+ - Play with engine
+ - Play Engine vs Engine game
+
+# Bonuses
+ - 2 engines (<a href="https://github.com/maksimKorzh/wukong-xiangqi">Wukong</a>, <a href="https://github.com/EterCyber/Chameleon">Chameleon</a>)
+ - 33646 master games in UBB format
+ 
 # Run desktop app
 ```bash
 # Clone this repository
