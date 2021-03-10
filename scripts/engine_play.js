@@ -133,7 +133,7 @@ function search() {
  ============================              
 \****************************/
 
-var engineSide = 1;
+var engineSide = 2;
 var fixedTime = 1;
 var fixedDepth = 0;
 

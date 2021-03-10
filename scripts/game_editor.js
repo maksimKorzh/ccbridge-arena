@@ -388,6 +388,7 @@ function newGame() {
   UBB = '';
   initdata();
   updateGUIboard('First');
+  document.title = 'CCBridge JS';
 }
 
 // load UBB game from file
