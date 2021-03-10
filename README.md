@@ -1,8 +1,5 @@
-# CCBridge JS (under development)
+# CCBridge JS
 Cross-platform Chinese chess xiangqi GUI inspired by CCBridge
-
-# Development progress
-https://www.youtube.com/watch?v=w_jrAZJpEjA&list=PLmN0neTso3JyhEwFGe6EZa7rTlawjgNtu
 
 # Features
  - View/Edit games in famous UBB format
