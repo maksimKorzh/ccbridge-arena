@@ -52,6 +52,9 @@ app.on('ready', function() {
   // to look more like desktop app
   gameEditor.webContents.on('did-finish-load', function() {
     gameEditor.show();
+    
+    // Open the DevTools.
+    //gameEditor.webContents.openDevTools()
   });
   
   // quit app when closed
@@ -59,73 +62,33 @@ app.on('ready', function() {
     app.quit();
   });
   
-  // build menu from template
-  const mainMenu = Menu.buildFromTemplate([
-    {
-      label: 'Engine',
-      submenu: [
-        {
-          accelerator: 'Ctrl+D',
-          label: 'Debug engine',
-          click() {
-            createEngineDebugWindow();
-          }
-        },
-        {
-          accelerator: 'Ctrl+E',
-          label: 'Human vs Engine',
-          click() {
-            createPlayEngineWindow();
-          }
-        },
-        {
-          accelerator: 'Ctrl+M',
-          label: 'Engine vs Engine',
-          click() {
-            createEngineMatchWindow();
-          }
-        }
-      ]
-    },
-    {
-      accelerator: 'Ctrl+Shift+I',
-      label: 'DevTools',
-      click(item, focusedWindow) {
-        focusedWindow.toggleDevTools();
-      }
-    },
-    {
-      role: 'reload'
-    }
-  ]);
-  
   // insert menu
-  Menu.setApplicationMenu(mainMenu);
+  gameEditor.setMenu(null);
 });
 
 
 /****************************\
  ============================
  
-        ENGINE WINDOWS
+        ENGINE WINDOW
 
  ============================              
 \****************************/
 
 // window instances
-let engineDebugWindow = null;
-let playEngineWindow = null;
-let engineMatchWindow = null;
+let engineWindow1 = null;
+let engineWindow2 = null;
 
-// debug engine
-function createEngineDebugWindow() {
-  if (engineDebugWindow == null) { 
+// play with engines
+function createEngineWindow1() {
+  if (engineWindow1 == null) {
     // create new window
-    engineDebugWindow = new BrowserWindow({
+    engineWindow1 = new BrowserWindow({
       show: false,
       resizable: false,
       width: 391,
       height: 486,
+      title: 'Engine 1',
       webPreferences: {
         enableRemoteModule: true,
         nodeIntegration: true,
@@ -134,74 +97,37 @@ function createEngineDebugWindow() {
     });
     
     // load URL into window
-    engineDebugWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'views/engine_debug.html'),
-      protocol: 'file:',
-      slashes: true
-    }));
-    
-    // to look more like desktop app
-    engineDebugWindow.webContents.on('did-finish-load', function() {
-      engineDebugWindow.show();
-    });
-    
-    // garbage collection handle
-    engineDebugWindow.on('close', function() {
-      engineDebugWindow = null;
-    });
-    
-    // don't show menu
-    engineDebugWindow.setMenu(null)
-  }
-}
-
-// play with engine
-function createPlayEngineWindow() {
-  if (playEngineWindow == null) { 
-    // create new window
-    playEngineWindow = new BrowserWindow({
-      show: false,
-      resizable: false,
-      width: 391,
-      height: 486,
-      webPreferences: {
-        enableRemoteModule: true,
-        nodeIntegration: true,
-        contextIsolation: false
-      }
-    });
-    
-    // load URL into window
-    playEngineWindow.loadURL(url.format({
+    engineWindow1.loadURL(url.format({
       pathname: path.join(__dirname, 'views/engine_play.html'),
       protocol: 'file:',
       slashes: true
     }));
     
     // to look more like desktop app
-    playEngineWindow.webContents.on('did-finish-load', function() {
-      playEngineWindow.show();
+    engineWindow1.webContents.on('did-finish-load', function() {
+      engineWindow1.show();
     });
     
     // garbage collection handle
-    playEngineWindow.on('close', function() {
-      playEngineWindow = null;
+    engineWindow1.on('close', function() {
+      engineWindow1 = null;
     });
     
     // don't show menu
-    playEngineWindow.setMenu(null)
+    engineWindow1.setMenu(null)
   }
 }
 
-// engine match
-function createEngineMatchWindow() {
-  if (engineMatchWindow == null) { 
+// play with engines
+function createEngineWindow2() {
+  if (engineWindow2 == null) {
     // create new window
-    engineMatchWindow = new BrowserWindow({
+    engineWindow2 = new BrowserWindow({
       show: false,
       resizable: false,
       width: 391,
       height: 486,
+      title: 'Engine 2',
       webPreferences: {
         enableRemoteModule: true,
         nodeIntegration: true,
@@ -210,24 +136,24 @@ function createEngineMatchWindow() {
     });
     
     // load URL into window
-    engineMatchWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'views/engine_match.html'),
+    engineWindow2.loadURL(url.format({
+      pathname: path.join(__dirname, 'views/engine_play.html'),
       protocol: 'file:',
       slashes: true
     }));
     
     // to look more like desktop app
-    engineMatchWindow.webContents.on('did-finish-load', function() {
-      engineMatchWindow.show();
+    engineWindow2.webContents.on('did-finish-load', function() {
+      engineWindow2.show();
     });
     
     // garbage collection handle
-    engineMatchWindow.on('close', function() {
-      engineMatchWindow = null;
+    engineWindow2.on('close', function() {
+      engineWindow2 = null;
     });
     
     // don't show menu
-    engineMatchWindow.setMenu(null)
+    engineWindow2.setMenu(null)
   }
 }
 
@@ -240,6 +166,16 @@ function createEngineMatchWindow() {
  ============================              
 \****************************/
 
+// listen to create engine window request
+ipcMain.on('engine1', function() {
+  createEngineWindow1();
+});
+
+// listen to create engine window request
+ipcMain.on('engine2', function() {
+  createEngineWindow2();
+});
+
 // listen to best move from engine
 ipcMain.on('bestmove', function(e, bestMove){
   gameEditor.webContents.send('bestmove', bestMove);
@@ -247,9 +183,8 @@ ipcMain.on('bestmove', function(e, bestMove){
 
 // listen to GUI move
 ipcMain.on('guifen', function(e, guiFen) {
-  // send to all windows
-  if (engineDebugWindow) engineDebugWindow.webContents.send('guifen', guiFen);
-  if (playEngineWindow) playEngineWindow.webContents.send('guifen', guiFen);
+  if (engineWindow1) engineWindow1.webContents.send('guifen', guiFen);
+  if (engineWindow2) engineWindow2.webContents.send('guifen', guiFen);
 });
 
 

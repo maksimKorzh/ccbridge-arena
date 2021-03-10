@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Engine</title>
-  
   <!-- Electron specific  -->
   <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
@@ -21,7 +19,7 @@
 <body style="background-color: #dddddd;">
   <div style="margin-left: 1px; margin-right: 1px;">
     <!-- Engine output -->
-    <textarea id="output" class="form-control m-0" spellcheck="false" style="width: 100%; height: 341px; resize: none; border: 2px solid #404040;"></textarea>
+    <textarea id="output" class="form-control m-0" spellcheck="false" style="width: 100%; height: 341px; resize: none; border: 2px solid #404040; font-family: monospace"></textarea>
     
     <!-- Load engine -->
     <button class="col btn btn-outline-secondary text-dark bg-light font-weight-bold" style="margin-top: 1px; margin-bottom: 1px; border: 2px solid #404040;" title="Load engine" onclick="loadEngine();">Load engine</button>
@@ -66,8 +64,8 @@
       <div class="col text-center m-0 p-0">
         <select id="engineside" class="col form-control" style="margin-top: 1px; border: 2px solid #404040;">
           <option value="0">Engine plays red</option>
-          <option value="1" selected>Engine plays black</option>
-          <option value="2">Analysis mode</option>
+          <option value="1">Engine plays black</option>
+          <option value="2" selected>Analysis mode</option>
         </select>
       </div>
       <div class="col text-center m-0 p-0">

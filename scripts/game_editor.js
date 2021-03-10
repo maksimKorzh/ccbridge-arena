@@ -1,7 +1,7 @@
 /****************************\
  ============================
  
-        MAIN GUI MODULE
+      GAME EDITOR MODULE
 
  ============================              
 \****************************/
@@ -97,7 +97,9 @@ function updateGUIboard(moveNumber, variationId) {
   
   // update GUI board
   board.position(UBBfen);
-  ipcRenderer.send('guifen', engine.generateFen());
+  
+  if (isGameOver() == 0)
+    ipcRenderer.send('guifen', engine.generateFen());
   
   // current move to highlight
   updateGameTree();
@@ -146,7 +148,9 @@ function deleteMove() {
   
   // update GUI board
   board.position(UBBfen);
-  ipcRenderer.send('guifen', engine.generateFen());
+  
+  if (isGameOver() == 0)
+    ipcRenderer.send('guifen', engine.generateFen());
   
   // current move to highlight
   updateGameTree();
@@ -255,8 +259,48 @@ function copyUbb() {
  ============================              
 \****************************/
 
+// check for game state
+function isGameOver() {
+  if (engine.generateLegalMoves().length == 0) {
+    gameResult = (engine.getSide() ? 'Black is checkmated' : 'Red is checkmated');
+    return 1;
+  }
+
+  if (engine.generateLegalMoves().length == 0) {
+    gameResult = (engine.getSide() ? 'Red is checkmated' : 'Black is checkmated') + ' mate';
+    return 1;
+  }
+  
+  return 0;
+}
+
+// highlight legal moves
+function highlightLegalMoves(sourceSquare) {
+  let legalMoves = engine.generateLegalMoves();
+  
+  for (let index = 0; index < legalMoves.length; index++) {
+    let move = legalMoves[index].move;
+    let source = engine.squareToString(engine.getSourceSquare(move));
+    let target = engine.squareToString(engine.getTargetSquare(move));
+    
+    if (source == sourceSquare) {
+      document.querySelector('.square-' + target).classList.add('legalmove');
+      
+      if (engine.getPiece(engine.getTargetSquare(move)))
+        document.querySelector('.square-' + target).classList.add('legalcapture');
+    }
+  }
+}
+
 // move piece
 function movePiece (source, target) {
+  // remove all previous highlights
+  document.querySelectorAll('.square-2b8ce').forEach(function(item) {
+    item.classList.remove('highlight');
+    item.classList.remove('legalmove');
+    item.classList.remove('legalcapture');
+  });
+  
   let move = source + target;
   let validMove = engine.moveFromString(move);
 
@@ -270,12 +314,11 @@ function movePiece (source, target) {
     if (validMove == legalMoves[count].move) isLegal = 1;  
   }
   
-  // illegal move
+  // invalid move
   if (isLegal == 0) return 'snapback';
   
   // make move on engine's board
-  engine.makeMove(validMove);    
-  engine.printBoard();
+  engine.makeMove(validMove);
   
   // sync with DPXQ board
   updateUBB(source, target);
@@ -284,17 +327,20 @@ function movePiece (source, target) {
   if (validMove) playSound(validMove);
   
   // highlight last move
-  document.querySelectorAll('.square-2b8ce').forEach(function(item) {
-    item.classList.remove('highlight');
-  });
   document.querySelector('.square-' + target).classList.add('highlight');
+  
+  // check game state
+  if (isGameOver()) alert(gameResult);
 }
 
 // update the board position after the piece snap
 function onSnapEnd () {
   board.position(engine.generateFen());
-  ipcRenderer.send('guifen', engine.generateFen());
+  
+  if (isGameOver() == 0)
+    ipcRenderer.send('guifen', engine.generateFen());
 }
+
 
 /****************************\
  ============================
@@ -424,12 +470,14 @@ function saveUbb() {
  ============================              
 \****************************/
 
+var gameResult = '';
+
 // chess board configuration
 var config = {
   draggable: true,
   pieceTheme: '../libs/xiangqiboardjs-0.3.3/img/xiangqipieces/traditional/{piece}.png',
   position: 'start',
-  //onDragStart: onDragStart,
+  onDragStart: highlightLegalMoves,
   onDrop: movePiece,
   onSnapEnd: onSnapEnd
 };
@@ -442,5 +490,11 @@ const engine = new Engine();
 
 // init starting position
 engine.setBoard(engine.START_FEN);
+
+
+
+
+
+
 
 

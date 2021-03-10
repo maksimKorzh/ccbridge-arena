@@ -45,7 +45,7 @@ function loadEngine() {
 function communicate(enginePath) {
   // start engine process
   engineProcess = execFile(enginePath);
-  document.title = 'Engine "' + enginePath.split('engines/')[1].replace('linux/', '').replace('windows/', '') + '" is loaded';
+  document.title += ' ' + enginePath.split('engines/')[1].replace('linux/', '').replace('windows/', '').split('/')[0] + ' is loaded';
 
   // init engine
   engineProcess.stdin.write('uci\n');
@@ -79,6 +79,14 @@ function communicate(enginePath) {
   // listen to GUI move
   ipcRenderer.on('guifen', function(e, fen) {
     var fen = fen.split('E').join('B').split('H').join('N').split('e').join('b').split('h').join('n');
+    if (fen.includes('rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1')) {
+      engineProcess.stdin.write('ucinewgame\n');
+      
+      const output = document.getElementById('output');
+      output.value += 'ucinewgame\n';
+      output.scrollTop = output.scrollHeight;
+    }
+
     engineProcess.stdin.write('position fen ' + fen + '\n');
     
     const output = document.getElementById('output');
@@ -147,8 +155,6 @@ $('#time').on('change', function() {
 $('#engineside').on('change', function() {
   engineSide = parseInt($('#engineside').val());
 });
-
-
 
 
 
