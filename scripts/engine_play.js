@@ -47,10 +47,15 @@ function communicate(enginePath) {
   engineProcess = execFile(enginePath);
   document.title += ' ' + enginePath.split('engines/')[1].replace('linux/', '').replace('windows/', '').split('/')[0] + ' is loaded';
 
-  // init engine
-  engineProcess.stdin.write('uci\n');
-  engineProcess.stdin.write('ucinewgame\n');
-
+  // set xiangqi variant and UCCI protocol for fairy stockfish
+  if (document.title.includes('Fairy')) {
+    engineProcess.stdin.write('ucci\n')
+    engineProcess.stdin.write('position fen rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1\n')
+  } else { // init UCI engine
+    engineProcess.stdin.write('uci\n');
+    engineProcess.stdin.write('ucinewgame\n');
+  }
+  
   // listen to engine output
   engineProcess.stdout.on('data', (data) => {
     const output = document.getElementById('output');
