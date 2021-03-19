@@ -333,7 +333,7 @@ function movePiece (source, target) {
   }, 150);
   
   // check game state
-  if (isGameOver()) alert(gameResult);
+  if (isGameOver()) document.title += ' (' + gameResult + ')';
 }
 
 // update the board position after the piece snap
