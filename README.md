@@ -1,4 +1,4 @@
-# CCBridge JS
+# CCBridge Arena
 Cross-platform Chinese chess xiangqi GUI inspired by CCBridge
 
 # How to install + features demonstration
