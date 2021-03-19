@@ -1,5 +1,5 @@
 # CCBridge Arena
-Cross-platform Chinese chess xiangqi GUI inspired by CCBridge
+Cross-platform Chinese chess xiangqi GUI inspired by CCBridge and Arena
 
 # How to install + features demonstration
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/eWZ3U6sL8Ck/0.jpg)](https://www.youtube.com/watch?v=eWZ3U6sL8Ck)
