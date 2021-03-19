@@ -33,7 +33,7 @@ app.on('ready', function() {
   gameEditor = new BrowserWindow({
     show: false,
     resizable: false,
-    width: 844,
+    width: 447,
     height: 564,
     webPreferences: {
       enableRemoteModule: true,
@@ -62,8 +62,11 @@ app.on('ready', function() {
     app.quit();
   });
   
-  // insert menu
-  gameEditor.setMenu(null);
+  // Build menu from template
+  const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+  
+  // Insert menu
+  Menu.setApplicationMenu(mainMenu);
 });
 
 
@@ -87,7 +90,7 @@ function createEngineWindow1() {
       show: false,
       resizable: false,
       width: 391,
-      height: 486,
+      height: 588,
       title: 'Engine 1',
       webPreferences: {
         enableRemoteModule: true,
@@ -113,8 +116,8 @@ function createEngineWindow1() {
       engineWindow1 = null;
     });
     
-    // don't show menu
-    engineWindow1.setMenu(null)
+    // Insert menu
+    engineWindow1.setMenu(null);
   }
 }
 
@@ -126,7 +129,7 @@ function createEngineWindow2() {
       show: false,
       resizable: false,
       width: 391,
-      height: 486,
+      height: 588,
       title: 'Engine 2',
       webPreferences: {
         enableRemoteModule: true,
@@ -152,10 +155,56 @@ function createEngineWindow2() {
       engineWindow2 = null;
     });
     
-    // don't show menu
-    engineWindow2.setMenu(null)
+    // Insert menu
+    engineWindow2.setMenu(null);
   }
 }
+
+
+/****************************\
+ ============================
+ 
+    WINDOW MENU TEMPLATES
+
+ ============================              
+\****************************/
+
+const mainMenuTemplate = [
+  {
+    label: 'File',
+    submenu: [
+      {
+        label: 'New game',
+        click() { gameEditor.webContents.send('newgame'); }
+      },
+      {
+        label: 'Open game',
+        click() { gameEditor.webContents.send('opengame'); }
+      },
+      {
+        label: 'Save game',
+        click() { gameEditor.webContents.send('savegame'); }
+      }
+    ]
+  },
+  {
+    label: 'Engine',
+    submenu: [
+      {
+        label: 'Load engine 1',
+        click() { createEngineWindow1(); }
+      },
+      {
+        label: 'Load engine 2',
+        click() { createEngineWindow2(); }
+      }
+    ]
+  },
+  {
+    label: 'Movelist',
+    click() { gameEditor.webContents.send('movelist'); }
+  }
+];
 
 
 /****************************\
@@ -186,9 +235,5 @@ ipcMain.on('guifen', function(e, guiFen) {
   if (engineWindow1) engineWindow1.webContents.send('guifen', guiFen);
   if (engineWindow2) engineWindow2.webContents.send('guifen', guiFen);
 });
-
-
-
-
 
 

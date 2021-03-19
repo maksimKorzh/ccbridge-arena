@@ -62,6 +62,17 @@ function communicate(enginePath) {
     output.value += 'Engine to GUI: ' + data;
     output.scrollTop = output.scrollHeight;
     
+    // update stats
+    if (data.includes('score')) {
+      let nodes = parseInt(data.split('nodes ')[1].split(' ')[0]);
+      let time = parseInt(data.split('time ')[1].split(' ')[0]);
+      let score = parseInt(data.split('score ')[1].split(' ')[1]);
+      score = isNaN(score) ? parseInt(data.split('score ')[1].split(' ')[0]) : score
+      document.getElementById('score').innerHTML = score;
+      document.getElementById('depth').innerHTML = data.split('depth ')[1].split(' ')[0];
+      document.getElementById('knps').innerHTML = (nodes / time).toFixed(2);
+    }
+    
     // send move to board window
     if (data.includes('bestmove'))
       setTimeout(function() {

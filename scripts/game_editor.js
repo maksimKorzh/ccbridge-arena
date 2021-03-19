@@ -11,6 +11,7 @@ const path = require('path');
 const fs = require('fs');
 const {ipcRenderer} = electron;
 const dialog = electron.remote.dialog;
+const remote = require('electron').remote;
 
 
 /****************************\
@@ -327,7 +328,9 @@ function movePiece (source, target) {
   if (validMove) playSound(validMove);
   
   // highlight last move
-  document.querySelector('.square-' + target).classList.add('highlight');
+  setTimeout(function() {
+    document.querySelector('.square-' + target).classList.add('highlight');
+  }, 150);
   
   // check game state
   if (isGameOver()) alert(gameResult);
@@ -369,6 +372,34 @@ function playSound(move) {
  ============================              
 \****************************/
 
+// listen to new game menu click
+ipcRenderer.on('newgame', function(e) {
+  newGame();
+});
+
+// listen to opem game menu click
+ipcRenderer.on('opengame', function(e) {
+  loadUbb();
+});
+
+// listen to opem game menu click
+ipcRenderer.on('savegame', function(e) {
+  saveUbb();
+});
+
+// listen to toggle move list menu click
+ipcRenderer.on('movelist', function(e) {
+  let size = remote.getCurrentWindow().webContents.getOwnerBrowserWindow().getBounds()['width'];
+  
+  remote.getCurrentWindow().setBounds({
+    x: remote.getCurrentWindow().getPosition()[0],
+    y: remote.getCurrentWindow().getPosition()[1],
+    width: (size == 844 ? 447 : 844),
+    height: 564
+  });
+
+});
+
 // listen to best move
 ipcRenderer.on('bestmove', function(e, bestMove) {
   movePiece(bestMove[0] + bestMove[1], bestMove[2] + bestMove[3], 0);
@@ -388,7 +419,7 @@ function newGame() {
   UBB = '';
   initdata();
   updateGUIboard('First');
-  document.title = 'CCBridge JS';
+  document.title = 'CCBridge Arena';
 }
 
 // load UBB game from file
@@ -481,6 +512,9 @@ var config = {
   draggable: true,
   pieceTheme: '../libs/xiangqiboardjs-0.3.3/img/xiangqipieces/traditional/{piece}.png',
   position: 'start',
+  moveSpeed: 50,
+  snapbackSpeed: 50,
+  snapSpeed: 50,
   onDragStart: highlightLegalMoves,
   onDrop: movePiece,
   onSnapEnd: onSnapEnd
