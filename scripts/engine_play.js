@@ -45,7 +45,7 @@ function loadEngine() {
 function communicate(enginePath) {
   // start engine process
   engineProcess = execFile(enginePath);
-  document.title += ' ' + enginePath.split('engines/')[1].replace('linux/', '').replace('windows/', '').split('/')[0] + ' is loaded';
+  document.title += enginePath.split('/')[enginePath.split('/').length - 1];
 
   // set xiangqi variant and UCCI protocol for fairy stockfish
   if (document.title.includes('Fairy')) {
@@ -154,16 +154,16 @@ var fixedTime = 1;
 var fixedDepth = 0;
 
 // listen to change of search depth
-$('#depth').on('change', function() {
-  $('#time').val('0');
-  fixedDepth = $('#depth').val();
+$('#fixedDepth').on('change', function() {
+  $('#fixedTime').val('0');
+  fixedDepth = $('#fixedDepth').val();
   fixedTime = 0;
 });
 
 // listen to change of search time
-$('#time').on('change', function() {
-  $('#depth').val('0');
-  fixedTime = $('#time').val();
+$('#fixedTime').on('change', function() {
+  $('#fixedDepth').val('0');
+  fixedTime = $('#fixedTime').val();
   fixedDepth = 0;
 });
 
