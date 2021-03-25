@@ -48,7 +48,7 @@ function communicate(enginePath) {
   document.title += enginePath.split('/')[enginePath.split('/').length - 1];
 
   // set xiangqi variant and UCCI protocol for fairy stockfish
-  if (document.title.includes('Fairy')) {
+  if (document.title.includes('fairy')) {
     engineProcess.stdin.write('ucci\n')
     engineProcess.stdin.write('position fen rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1\n')
   } else { // init UCI engine
@@ -138,6 +138,19 @@ function search() {
     output.value += 'GUI to engine: ' + 'go movetime ' + (fixedTime * 1000) + '\n';
     output.scrollTop = output.scrollHeight;
   }
+}
+
+// send UCI command to engine
+function sendUCIcommand() {
+  try {
+    let command = document.getElementById('ucicommand').value;
+    engineProcess.stdin.write(command + '\n');
+    document.getElementById('ucicommand').value = '';
+
+    const output = document.getElementById('output');
+    output.value += 'GUI to engine: ' + command + '\n';
+    output.scrollTop = output.scrollHeight;
+  } catch(e) { alert('Engine is not loaded')}
 }
 
 

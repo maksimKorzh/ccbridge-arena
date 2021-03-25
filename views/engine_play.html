@@ -28,8 +28,16 @@
     <!-- Engine output -->
     <textarea id="output" class="form-control m-0" spellcheck="false" style="width: 100%; height: 418px; resize: none; border: 2px solid #404040; font-family: monospace"></textarea>
     
-    <!-- Load engine -->
-    <button class="col btn btn-outline-secondary text-dark bg-light font-weight-bold" style="margin-top: 1px; margin-bottom: 1px; border: 2px solid #404040;" title="Load engine" onclick="loadEngine();">Load engine</button>
+    <div class="col btn-group m-0 p-0">
+      <!-- Load engine -->
+      <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold" style="margin-right: 1px; margin-top: 1px; margin-bottom: 1px; border: 2px solid #404040;" title="Load engine" onclick="loadEngine();">Load</button>
+      
+      <!-- UCI command -->
+      <input id="ucicommand" type="text" placeholder=" UCI command" style="margin-top: 1px; margin-bottom: 1px; margin-right: 0px; margin-left: 0px; border: 2px solid #404040;"/>
+      
+      <!-- Send command -->
+      <button class="btn btn-outline-secondary text-dark bg-light font-weight-bold" style="margin-left: 1px; margin-top: 1px; margin-bottom: 1px; border: 2px solid #404040;" title="Send command to engine" onclick="sendUCIcommand();">Send</button>
+    </div>
     
     <!-- Difficulty -->
     <div class="btn-group m-0 p-0" style="width: 388px;">
@@ -76,7 +84,7 @@
         </select>
       </div>
       <div class="col text-center m-0 p-0">
-        <button class="col btn btn-outline-secondary text-dark bg-light font-weight-bold" style="height: 38px; margin-left: 1px; margin-top: 1px; margin-bottom: 1px; border: 2px solid #404040;" title="Load engine" onclick="makeMove('');">Make move</button>
+        <button class="col btn btn-outline-secondary text-dark bg-light font-weight-bold" style="height: 38px; margin-left: 1px; margin-top: 1px; margin-bottom: 1px; border: 2px solid #404040;" title="Force engine to move" onclick="makeMove('');">Make move</button>
       </div>
     </div>
 

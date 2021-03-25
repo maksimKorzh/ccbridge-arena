@@ -10,7 +10,7 @@ Cross-platform Chinese chess xiangqi GUI inspired by CCBridge and Arena
  - Play Engine vs Engine game
 
 # Bonuses
- - 2 engines (<a href="https://github.com/maksimKorzh/wukong-xiangqi">Wukong</a>, <a href="https://github.com/EterCyber/Chameleon">Chameleon</a>)
+ - 2 engines (<a href="https://github.com/maksimKorzh/wukong-xiangqi">Wukong</a>, <a href="https://github.com/EterCyber/Chameleon">Chameleon</a>, <a href="https://github.com/ianfab/Fairy-Stockfish/tree/master/src">Fairy Stockfish</a>)
  - 33646 master games in UBB format
  
 # Run desktop app
